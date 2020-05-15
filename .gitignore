@@ -1,0 +1,9 @@
+.env
+node_modules/
+resources/*
+!resources/.gitkeep
+nlp/model.json
+shrinkwrap.yaml
+constant.js
+public/
+sass/
