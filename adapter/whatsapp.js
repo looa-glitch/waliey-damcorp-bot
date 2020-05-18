@@ -8,8 +8,6 @@ const moment = require('moment')
 const fs = require('fs')
 const session = require('express-session')
 const uuid = require('uuid/v4')
-const msgin = require('../model/messages-in')
-const msgout = require('../model/messages-out')
 const httpContext = require('express-http-context')
 module.exports = class WhatsappAdapter extends BotAdapter {
     constructor(){
@@ -35,19 +33,6 @@ module.exports = class WhatsappAdapter extends BotAdapter {
                         conversation: message.conversation.cs_conversation
                     }
                 }
-                
-                // trackMgr.log('message-out', options)
-                await helper.api(options).then(({ data }) => {
-                    msgout.create({
-                        to: message.recipient.id,
-                        message: message.text,
-                        message_type: "text",
-                        message_id: data.data.length > 0 ? data.data[0].msgId : null
-                    }).catch(err => {
-    
-                    })
-                })
-                .catch(err => { })
             }
 
     processMedia(message){
@@ -67,11 +52,7 @@ module.exports = class WhatsappAdapter extends BotAdapter {
             .then(resp => {
                 if(type == "image"){
                     helper.uploadImage(resp.data.data).then(result => resolve(result)).catch(err => reject(err))
-                } else if(messageType == "image"){
-                    let{secure_url} = await this.processMedia(body)
-                    activity.image = secure_url
-                    activity.text = body.messages[0][message_type].caption
-                } 
+                }
                 else {
                     let filename = `vn-${message.contacts[0].wa_id}-${moment().unix()}.ogg`
                     fs.writeFile(__dirname + '/../resources/' + filename, resp.data.data, 'base64', (err) => {

@@ -27,7 +27,7 @@ let storage = null;
 if (config.mongodb) {
     storage = mongoStorage = new MongoDbStorage({
         url : config.mongodb,
-        database: 'danone',
+        database: 'wali-bot',
         collection: 'botstorage'
     });
     const mongoose = require('mongoose')
